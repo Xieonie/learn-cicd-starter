@@ -1,17 +1,6 @@
-<<<<<<< HEAD
 jobs:
   deploy:
     name: Deploy
-=======
-name: CD
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  Deploy:
->>>>>>> bd215c1026a53bd7914fab06acf3b80623ac678c
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +10,6 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-<<<<<<< HEAD
           go-version: 1.22
 
       - name: Install goose
@@ -39,12 +27,3 @@ jobs:
 
       - name: Deploy App
         run: echo "Hier dein Deploy-Schritt (z. B. Docker Push oder SSH Deploy)"
-=======
-          go-version: '1.21'   # oder die Version, die dein Projekt nutzt
-
-      - name: Make build script executable
-        run: chmod +x scripts/buildprod.sh
-
-      - name: Run build script
-        run: ./scripts/buildprod.sh
->>>>>>> bd215c1026a53bd7914fab06acf3b80623ac678c
