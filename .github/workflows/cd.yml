@@ -21,7 +21,6 @@ jobs:
         run: |
           goose -dir ./migrations sqlite "$DATABASE_URL" up
 
-      # Ab hier kannst du dein normales Deployment starten
       - name: Build Docker image
         run: docker build -t my-app .
 
