@@ -1,7 +1,8 @@
+name: cd
+
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   deploy:
@@ -9,29 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install system dependencies (SQLite)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y sqlite3 libsqlite3-dev pkg-config
+      - name: Check out code
+        uses: actions/checkout@v4
 
       - name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
-          go-version: 1.21
+          go-version: "1.25.1"
 
-      - name: Add GOPATH/bin to PATH
-        run: echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
-
+      # Install goose (migration CLI)
       - name: Install goose
-        run: go install github.com/pressly/goose/v3/cmd/goose@latest
+        run: |
+          go install github.com/pressly/goose/v3/cmd/goose@latest
+          echo "goose installed to $(go env GOPATH)/bin"
 
+      - name: Build binary
+        run: ./scripts/buildprod.sh
+
+      - name: Build and Push Docker image
+        run: docker build -t russe98/notely:latest .
+
+      # Run DB migrations (inject DATABASE_URL ONLY here)
       - name: Run DB migrations with goose
         run: ./scripts/migrateup.sh
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-      - name: Build Docker image
-        run: docker build -t my-app:${{ github.sha }} .
