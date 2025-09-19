@@ -36,7 +36,7 @@ jobs:
             echo "DATABASE_URL is not set"
             exit 1
           fi
-          goose -dir ./migrations sqlite "$DATABASE_URL" up
+          goose -dir ./sql/schema sqlite "$DATABASE_URL" up
 
       - name: Build Docker image
         run: docker build -t my-app:${{ github.sha }} .
